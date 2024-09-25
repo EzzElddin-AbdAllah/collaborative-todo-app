@@ -41,9 +41,9 @@ const SignUpForm = () => {
 				},
 			});
 			if (error) throw error;
-			alert("Sign-up successful! Check your email for verification.");
-		} catch (error: any) {
-			setAuthError(error.message);
+			alert("Sign-up successful!");
+		} catch {
+			setAuthError("Auth Failed");
 		}
 	};
 

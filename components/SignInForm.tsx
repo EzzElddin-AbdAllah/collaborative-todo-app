@@ -37,9 +37,9 @@ const SignInForm = () => {
 				password,
 			});
 			if (error) throw error;
-			router.refresh();
-		} catch (error: any) {
-			setAuthError(error.message);
+			router.push("/todos");
+		} catch {
+			setAuthError("Auth Failed");
 		}
 	};
 

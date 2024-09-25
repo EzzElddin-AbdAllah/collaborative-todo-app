@@ -1,7 +1,6 @@
 "use client";
 
 import { supabase } from "@/lib/supabaseClient";
-import { useAuthStore } from "@/store/auth";
 import { useTodoStore } from "@/store/todo";
 import Todo from "@/types/Todo";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -17,6 +16,7 @@ import {
 } from "@mantine/core";
 import { RealtimePostgresChangesPayload } from "@supabase/supabase-js";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { FaEdit, FaPlus, FaSignOutAlt, FaTrash } from "react-icons/fa";
@@ -29,6 +29,7 @@ const todoSchema = z.object({
 type TodoFormData = z.infer<typeof todoSchema>;
 
 const TodoList = () => {
+	const router = useRouter();
 	const [editTask, setEditTask] = useState<{ id: string; task: string } | null>(
 		null
 	);
@@ -58,7 +59,6 @@ const TodoList = () => {
 	const {
 		data: fetchedTodos,
 		error,
-		isLoading,
 		isSuccess,
 	} = useQuery({
 		queryKey: ["todos"],
@@ -77,7 +77,6 @@ const TodoList = () => {
 		if (isSuccess && fetchedTodos) setTodos(fetchedTodos);
 	}, [fetchedTodos, isSuccess, setTodos]);
 
-	// Real-time updates
 	useEffect(() => {
 		const subscription = supabase
 			.channel("todos")
@@ -87,19 +86,18 @@ const TodoList = () => {
 				(payload: RealtimePostgresChangesPayload<Todo>) => {
 					const { eventType, new: newTodo, old: oldTodo } = payload;
 					if (eventType === "INSERT" && newTodo) {
-						addTodoStore(newTodo); // Add new todo to the state
+						addTodoStore(newTodo);
 					}
 					if (eventType === "UPDATE" && newTodo) {
-						updateTodoInStore(newTodo.id, newTodo.task); // Update the existing todo
+						updateTodoInStore(newTodo.id, newTodo.task);
 					}
 					if (eventType === "DELETE" && oldTodo) {
-						deleteTodoFromStore(oldTodo.id!); // Remove the deleted todo from state
+						deleteTodoFromStore(oldTodo.id!);
 					}
 				}
 			)
 			.subscribe();
 
-		// Cleanup subscription on component unmount
 		return () => {
 			subscription.unsubscribe();
 		};
@@ -126,11 +124,10 @@ const TodoList = () => {
 		getSession();
 	}, []);
 
-	// Handle add task
 	const handleAddTodo = async (data: TodoFormData) => {
 		const optimisticTodo: Todo = {
 			id: `${Date.now()}`,
-			user_id: user?.id!,
+			user_id: user?.id ?? "",
 			task: data.task,
 			is_complete: false,
 		};
@@ -150,40 +147,34 @@ const TodoList = () => {
 				queryClient.invalidateQueries({ queryKey: ["todos"] });
 				updateTodoInStore(optimisticTodo.id, insertedTodo![0].task);
 			}
-		} catch (err) {
+		} catch {
 			deleteTodoFromStore(optimisticTodo.id);
 		}
 	};
 
-	// Modify handleEditTodo to include form submission
 	const handleEditTodo = async () => {
 		if (!editTask?.id || !editTask.task) return;
 
-		// Optimistically update the todo in the UI
 		const originalTask = todos?.find((todo) => todo.id === editTask.id)?.task;
 		updateTodoInStore(editTask.id, editTask.task);
 
 		try {
-			// Update the todo in the database
 			const { error } = await supabase
 				.from("todos")
 				.update({ task: editTask.task })
 				.eq("id", editTask.id);
 
 			if (error) {
-				// Revert back if there was an error
 				updateTodoInStore(editTask.id, originalTask!);
 			} else {
-				// Reset the edit state
 				setEditTask(null);
 				queryClient.invalidateQueries({ queryKey: ["todos"] });
 			}
-		} catch (err) {
+		} catch {
 			updateTodoInStore(editTask.id, originalTask!);
 		}
 	};
 
-	// Handle delete task
 	const handleDeleteTodo = async (id: string) => {
 		const originalTodos = [...todos!];
 
@@ -196,18 +187,18 @@ const TodoList = () => {
 			} else {
 				queryClient.invalidateQueries({ queryKey: ["todos"] });
 			}
-		} catch (err) {
+		} catch {
 			setTodos(originalTodos);
 		}
 	};
 
-	// Handle sign out
 	const handleSignOut = async () => {
 		try {
 			const { error } = await supabase.auth.signOut();
 			if (error) throw error;
-		} catch (error: any) {
-			console.error(error.message);
+			router.push("/");
+		} catch {
+			console.error("Signout Error");
 		}
 	};
 
@@ -240,7 +231,7 @@ const TodoList = () => {
 								setEditTask((prev) =>
 									prev ? { ...prev, task: e.target.value } : null
 								)
-							} // Ensure `id` remains unchanged and `task` is updated
+							}
 							error={errors.task?.message}
 							className="w-full"
 						/>
@@ -266,8 +257,8 @@ const TodoList = () => {
 										size="xs"
 										variant="outline"
 										color="green"
-										onClick={
-											() => setEditTask({ id: todo.id, task: todo.task }) // Ensure both id and task are passed
+										onClick={() =>
+											setEditTask({ id: todo.id, task: todo.task })
 										}
 									>
 										<FaEdit />
