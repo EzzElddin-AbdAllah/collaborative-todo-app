@@ -4,6 +4,7 @@ import SignInForm from "@/components/SignInForm";
 import SignUpForm from "@/components/SignUpForm";
 import { supabase } from "@/lib/supabaseClient";
 import { Button, Container, Paper, Tabs, Title } from "@mantine/core";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
@@ -86,7 +87,6 @@ const Auth = () => {
 				provider: "github",
 			});
 			if (error) throw error;
-			// router.push("/todos");
 		} catch (error) {
 			console.error(error);
 		}
@@ -106,6 +106,9 @@ const Auth = () => {
 		return (
 			<Container>
 				<Title className="mb-4 text-center">Welcome, {user?.username}</Title>
+				<Button color="blue" fullWidth onClick={handleSignOut}>
+					<Link href="/todos">Go To To-Tods</Link>
+				</Button>
 				<Button color="red" fullWidth onClick={handleSignOut}>
 					Sign Out
 				</Button>
