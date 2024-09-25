@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabaseClient";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, PasswordInput, TextInput } from "@mantine/core";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,6 +19,7 @@ const signUpSchema = z.object({
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
 const SignUpForm = () => {
+	const router = useRouter();
 	const [authError, setAuthError] = useState<string | null>(null);
 
 	const {
@@ -42,6 +44,7 @@ const SignUpForm = () => {
 			});
 			if (error) throw error;
 			alert("Sign-up successful!");
+			router.push("/todos");
 		} catch {
 			setAuthError("Auth Failed");
 		}

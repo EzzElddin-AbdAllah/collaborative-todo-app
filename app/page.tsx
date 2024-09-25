@@ -86,7 +86,7 @@ const Auth = () => {
 				provider: "github",
 			});
 			if (error) throw error;
-			router.push("/todos");
+			// router.push("/todos");
 		} catch (error) {
 			console.error(error);
 		}
