@@ -1,36 +1,106 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Collaborative Todo List with Supabase Authentication
 
-## Getting Started
+This project is a collaborative to-do list application built using **Next.js 14**, **Tailwind CSS**, **Mantine**, **Supabase**, **Zustand**, **React Hook Form**, and **Zod**. The app allows users to sign up or sign in using email/password or GitHub OAuth, create/edit/delete tasks, and see real-time updates across multiple users.
 
-First, run the development server:
+## Features
+
+- **Sign Up/Sign In with Email and Password**.
+- **GitHub OAuth authentication**.
+- **Real-time collaborative to-do list**.
+- **Optimistic UI updates** using Zustand for state management.
+- **Form validation** using React Hook Form and Zod.
+- Styled with **Mantine** and **Tailwind CSS**.
+
+## Prerequisites
+
+Before running this application, make sure you have the following installed on your system:
+
+- **npm**
+- **Supabase** account (to set up Supabase authentication and real-time database)
+
+## Setup Instructions
+
+### 1. Clone the Repository
+
+First, clone the repository to your local machine:
+
+```bash
+git clone https://github.com/EzzElddin-AbdAllah/collaborative-todo-app.git
+cd collaborative-todo-app
+```
+
+### 2. Install Dependencies
+
+Next, install the project dependencies using npm or yarn:
+
+```bash
+npm install
+```
+
+### 3. Supabase Setup
+
+You need to set up a Supabase project for authentication and real-time database. Follow these steps:
+
+#### Create a Supabase Project
+
+1. Go to the Supabase website and create an account.
+
+2. Create a new project and note down the Supabase URL and Supabase API Key.
+
+#### Configure Authentication
+
+1. Go to Authentication in your Supabase dashboard.
+
+2. Enable Email and Password authentication.
+
+3. Enable GitHub OAuth in the Providers tab. You will need to create a GitHub OAuth app in your GitHub settings and provide the Client ID and Client Secret in Supabase.
+
+#### Database Setup
+
+1. Go to the SQL Editor in Supabase.
+
+2. Run the following SQL to create a todos table:
+
+```sql
+create table todos (
+id uuid default uuid_generate_v4() primary key,
+task text not null,
+is_complete boolean default false,
+inserted_at timestamp with time zone default now()
+);
+```
+
+### 4. Create a .env File
+
+In the root of the project, create a .env file and add your Supabase credentials:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
+
+### 5. Run the Application
+
+Once you have set up Supabase and added your credentials, you can start the application:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The app will be running at http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 6. Features Available
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- You can sign up or sign in using email and password.
+- Alternatively, you can sign in with GitHub.
+- Once logged in, you can create, edit, and delete tasks in real-time. Other users will see updates immediately.
 
-## Learn More
+## Technologies Used
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- Next.js 14: React framework for building server-rendered and statically generated websites.
+- Supabase: Backend-as-a-Service for authentication, real-time database, and storage.
+- Zustand: A small, fast, and scalable state-management solution.
+- React Hook Form: Form handling and validation.
+- Zod: Schema-based validation for form data.
+- Mantine: UI components library for React.
+- Tailwind CSS: Utility-first CSS framework for rapid UI development.
