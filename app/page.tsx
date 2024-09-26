@@ -3,8 +3,7 @@
 import SignInForm from "@/components/SignInForm";
 import SignUpForm from "@/components/SignUpForm";
 import { supabase } from "@/lib/supabaseClient";
-import { Button, Container, Paper, Tabs, Title } from "@mantine/core";
-import Link from "next/link";
+import { Button, Container, Paper, Tabs } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FaGithub } from "react-icons/fa";
