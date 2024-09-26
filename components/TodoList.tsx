@@ -108,6 +108,11 @@ const TodoList = () => {
 			const {
 				data: { session },
 			} = await supabase.auth.getSession();
+
+			if (!session) {
+				router.push("/");
+			}
+
 			if (session?.user) {
 				const { id, email, user_metadata } = session.user;
 				setUser({
@@ -122,7 +127,11 @@ const TodoList = () => {
 		};
 
 		getSession();
-	}, []);
+	}, [router]);
+
+	if (!user) {
+		return null;
+	}
 
 	const handleAddTodo = async (data: TodoFormData) => {
 		const optimisticTodo: Todo = {
@@ -253,25 +262,29 @@ const TodoList = () => {
 									</Badge>
 								</div>
 								<Group>
-									<Button
-										size="xs"
-										variant="outline"
-										color="green"
-										onClick={() =>
-											setEditTask({ id: todo.id, task: todo.task })
-										}
-									>
-										<FaEdit />
-									</Button>
+									{user?.id === todo.user_id && (
+										<>
+											<Button
+												size="xs"
+												variant="outline"
+												color="green"
+												onClick={() =>
+													setEditTask({ id: todo.id, task: todo.task })
+												}
+											>
+												<FaEdit />
+											</Button>
 
-									<Button
-										size="xs"
-										variant="outline"
-										color="red"
-										onClick={() => handleDeleteTodo(todo.id)}
-									>
-										<FaTrash />
-									</Button>
+											<Button
+												size="xs"
+												variant="outline"
+												color="red"
+												onClick={() => handleDeleteTodo(todo.id)}
+											>
+												<FaTrash />
+											</Button>
+										</>
+									)}
 								</Group>
 							</Group>
 						</Card>
