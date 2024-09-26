@@ -116,6 +116,10 @@ const Auth = () => {
 	// 	);
 	// }
 
+	if (user?.id) {
+		router.push("/todos");
+	}
+
 	return (
 		<Container className="flex justify-center items-center min-h-screen">
 			<Paper shadow="md" radius="md" withBorder className="p-6 w-full max-w-md">
