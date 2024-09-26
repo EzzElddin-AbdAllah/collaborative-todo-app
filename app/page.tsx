@@ -87,34 +87,35 @@ const Auth = () => {
 				provider: "github",
 			});
 			if (error) throw error;
+			router.push("/todos");
 		} catch (error) {
 			console.error(error);
 		}
 	};
 
-	const handleSignOut = async () => {
-		try {
-			const { error } = await supabase.auth.signOut();
-			if (error) throw error;
-			router.refresh();
-		} catch (error) {
-			console.error(error);
-		}
-	};
+	// const handleSignOut = async () => {
+	// 	try {
+	// 		const { error } = await supabase.auth.signOut();
+	// 		if (error) throw error;
+	// 		router.refresh();
+	// 	} catch (error) {
+	// 		console.error(error);
+	// 	}
+	// };
 
-	if (user?.id) {
-		return (
-			<Container>
-				<Title className="mb-4 text-center">Welcome, {user?.username}</Title>
-				<Button color="blue" fullWidth onClick={handleSignOut}>
-					<Link href="/todos">Go To To-Tods</Link>
-				</Button>
-				<Button color="red" fullWidth onClick={handleSignOut}>
-					Sign Out
-				</Button>
-			</Container>
-		);
-	}
+	// if (user?.id) {
+	// 	return (
+	// 		<Container>
+	// 			<Title className="mb-4 text-center">Welcome, {user?.username}</Title>
+	// 			<Button color="blue" fullWidth onClick={handleSignOut}>
+	// 				<Link href="/todos">Go To To-Tods</Link>
+	// 			</Button>
+	// 			<Button color="red" fullWidth onClick={handleSignOut}>
+	// 				Sign Out
+	// 			</Button>
+	// 		</Container>
+	// 	);
+	// }
 
 	return (
 		<Container className="flex justify-center items-center min-h-screen">
