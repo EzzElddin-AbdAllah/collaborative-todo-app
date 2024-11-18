@@ -1,7 +1,7 @@
 # Collaborative Todo List with Supabase Authentication
 
 This project is a collaborative to-do list application built using **Next.js 14**, **Tailwind CSS**, **Mantine**, **Supabase**, **Zustand**, **React Hook Form**, and **Zod**. The app allows users to sign up or sign in using email/password or GitHub OAuth, create/edit/delete tasks, and see real-time updates across multiple users.
-
+ 
 ## Features
 
 - **Sign Up/Sign In with Email and Password**.
